@@ -1,6 +1,8 @@
 # Operationalizing-an-AWS-ML-Project
 In this project will prepare the dogImage classification model to be deployed for production .
 
+![bikeshare](https://github.com/yasserelsawaf/Operationalizing-an-AWS-ML-Project/blob/4273adf76905c4fcf278ea1b11f08d2788e3c7ec/MLOps-Architecture.png)
+
 #Overview:
 
 Using several important tools and features of AWS to adjust, improve, configure, and prepare the trained model with for production-grade deployment ,
