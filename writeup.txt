@@ -1,0 +1,39 @@
+1 -instance choice justification
+started the project on the conda_pytorch_p38  kernel with the ml.t3.medium instance , beacuse it is the basic recommended instance for basic to medium data science and it is not too coslty.
+
+
+2 - EC2 code differences
+started EC2 instance with t2.micro Instance type becuase its resourse is sutibale for the image classifiction project , also it was eligbile for the free tier so it is cost efficent
+
+The adjusted code in ec2train1.py is very similar to the code in train_and_deploy-solution,ipynb. But there are a few differences between the modules used - some modules can only be used in SageMaker. Much of the EC2 training code has also been adapted from the functions defined in the hpo.py starter script.
+example : we dont import and use the sagemaker modules like hyperparamter tuner ,debugger , and analytics we also dont include the debugger and hooks on the train and test code.
+
+3 - lambda
+First we specifyruntime session and the endpoint name of the desired deployed model,
+then we invoke the specified endpoint to get a response (image prediction in this case) ,
+then we decode the recevied response (prediction) and return it in the desired format( json in this case)
+
+4- AWS workspace security
+- Depending on the project the data , the code  and the output model could be secured by uploading it to a VPC ( virtual private network)
+instead of S3 then the resulting prediction could be soted on S3 temporarily
+- The endpoint doesnt need to have full sagemaker access we can use custom SageMaker policy for allowing only endpoint invocation, this is to minimize any security risks by only allowing endpoint invocation to SageMaker. 
+
+5- Concurrency and auto-scaling
+Concurrency:
+[1] Start by opening Lambda and clicking "Functions" in your AWS Workspace.
+[2] Open a function - either an existing one or a new one that you create.
+[3] In the Configuration section, select Concurrency.
+[4] Click the Versions tab to create a new version of your Lambda function.
+[5] Select the Concurrency tab again, and add reserved or provisioned concurrency to your function.
+Justifying the Concurrency choice :
+-Choosing a high number for provisioned concurrency is suitable for very high-traffic projects, because it will turn on instances that can be used by your Lambda function any time. However, provisioned concurrency is expensive, so you might want to keep this number low.
+-Choosing a high number for reserved concurrency incurs no additional cost. It will allow you to choose a high number for provisioned concurrency, since provisioned concurrency must be lower than reserved concurrency.
+-Choosing lower numbers for either or both types of concurrency would be more suitable for lower-traffic projects, or projects with lower budgets.
+
+
+
+Auto-scaling:
+on the desired deployed  endpoint . Click on its name to open a dashboard allowing configuration.
+Scroll down to the section of the dashboard entitled "Endpoint runtime settings." Here, select the only deployed variant of your endpoint, and click "Configure autoscaling."
+select some configuration options for your endpoint's auto-scaling. You could select a maximum number of instances to be 2, and you could select cool-down values to be 30. You could also select your target value to be 30
+(for this project the traffic is only expected to double that why i choose to auto scale to 2 instances
